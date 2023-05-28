@@ -10,6 +10,9 @@ async function resolveIPv4(dnsRequest) {
   let ip = match ? match[1] : null;
 
   if (!ip) {
+
+    ip = '127.0.0.1';
+    /*
     ip = await new Promise((resolve) => {
       dns.resolve(domain, 'A', (error, address) => {
         if (error) {
@@ -20,17 +23,20 @@ async function resolveIPv4(dnsRequest) {
         }
       });
     });
+    */
   }
 
   return dnsPacket.encode({
     type: 'response',
     id: dnsRequest.id,
     flags: dnsPacket.RECURSION_DESIRED,
+    questions: dnsRequest.questions,
     answers: [{
       type: 'A',
       class: 'IN',
       name: domain,
       ttl: 3600,
+      flush: false,
       data: ip,
     }]
   });
