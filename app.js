@@ -50,16 +50,20 @@ socket.on('listening', () => {
 });
 
 socket.on('message', async (message, remote) => {
-  const dnsRequest = dnsPacket.decode(message);
-  const ipv4Response = await resolveIPv4(dnsRequest);
-
-  socket.send(ipv4Response, 0, ipv4Response.length, remote.port, remote.address, (error) => {
-    if (error) {
-      console.error('Failed to send DNS response:', error);
-    } else {
-      console.log('DNS response sent to', remote.address, remote.port);
-    }
-  });
+  try{
+    const dnsRequest = dnsPacket.decode(message);
+    const ipv4Response = await resolveIPv4(dnsRequest);
+  
+    socket.send(ipv4Response, 0, ipv4Response.length, remote.port, remote.address, (error) => {
+      if (error) {
+        console.error('Failed to send DNS response:', error);
+      } else {
+        console.log('DNS response sent to', remote.address, remote.port);
+      }
+    });
+  }catch(e) {
+    console.error(e);
+  }
 });
 
 socket.bind(53, '0.0.0.0');
