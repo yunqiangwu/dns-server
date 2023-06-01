@@ -1,4 +1,4 @@
-const dns = require('dns');
+// const dns = require('dns');
 const dnsPacket = require('dns-packet'); // 外部包 需要安装
 const dgram = require('dgram');
 
@@ -9,21 +9,20 @@ async function resolveIPv4(dnsRequest) {
 
   let ip = match ? match[1] : null;
 
-
   if (!ip) {
     return dnsPacket.encode({
       type: 'response',
       id: dnsRequest.id,
-      flags: dnsRequest.flags,
+      // flags: dnsPacket.CHECKING_DISABLED,
       questions: dnsRequest.questions,
-      answers: []
+      // answers: [],
     });
   }
 
   return dnsPacket.encode({
     type: 'response',
     id: dnsRequest.id,
-    flags: dnsPacket.RECURSION_DESIRED,
+    flags: dnsPacket.RECURSION_AVAILABLE,
     questions: dnsRequest.questions,
     answers: [{
       type: 'A',
@@ -60,7 +59,7 @@ socket.on('message', async (message, remote) => {
   }
 });
 
-socket.bind(53, '0.0.0.0');
+socket.bind(process.env.DNS_SERVER_PORT || 53, '0.0.0.0');
 
 const clean = async () => {
   console.log('beforeExit4: cleaned');
