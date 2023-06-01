@@ -9,21 +9,15 @@ async function resolveIPv4(dnsRequest) {
 
   let ip = match ? match[1] : null;
 
-  if (!ip) {
 
-    ip = '127.0.0.1';
-    /*
-    ip = await new Promise((resolve) => {
-      dns.resolve(domain, 'A', (error, address) => {
-        if (error) {
-          console.error(error);
-          resolve('127.0.0.1');
-        } else {
-          resolve(address[0]);
-        }
-      });
+  if (!ip) {
+    return dnsPacket.encode({
+      type: 'response',
+      id: dnsRequest.id,
+      flags: dnsRequest.flags,
+      questions: dnsRequest.questions,
+      answers: []
     });
-    */
   }
 
   return dnsPacket.encode({

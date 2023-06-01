@@ -13,12 +13,12 @@ const buf = dnsPacket.encode({
   flags: dnsPacket.RECURSION_DESIRED,
   questions: [{
     type: 'A',
-    name: 'dns.jajabjbj.top'
+    name: 'dnasdasdsadsadasdasdasdasdasdasdasdasdasdasdas.jajabjbj.top'
   }]
 })
 
 socket.on('message', message => {
-  console.log(dnsPacket.decode(message)) // prints out a response from google dns
+  console.log(JSON.stringify(dnsPacket.decode(message), null, 2)) // prints out a response from google dns
 })
 
 socket.send(buf, 0, buf.length, 53, '8.8.8.8')
